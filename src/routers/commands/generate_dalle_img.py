@@ -24,6 +24,7 @@ router = Router()
 @router.message(Command(commands=['img']))
 async def cmd_start(message: Message, state: FSMContext, bot: Bot) -> None:
     if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
+    await state.clear()
     message_log = False
     delete_message = False
     try:
