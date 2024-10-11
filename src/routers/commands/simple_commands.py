@@ -11,7 +11,7 @@ from aiogram import Router, Bot
 from admin.admin_logs import send_log_message
 
 from models.emojis import Emojis
-
+from models.long_messages import HELP_MESSAGE
 from services.postgres.user_service import UserService
 from services.postgres.role_management_service import RoleManagmentService
 
@@ -95,3 +95,12 @@ async def view_set_options(message: Message, state: FSMContext, bot: Bot) -> Non
     
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     if message_log: await send_log_message(message, bot, message_log)
+    
+
+@router.message(Command(commands=['help', 'cancel']))
+async def cmd_help(message: Message, state: FSMContext, bot: Bot) -> None:
+    if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
+    await state.clear()
+    delete_message = await message.answer(HELP_MESSAGE, ParseMode.HTML)
+    
+    if delete_message: await state.update_data(message_id=delete_message.message_id)
