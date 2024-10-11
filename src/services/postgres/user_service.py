@@ -4,14 +4,17 @@ from typing import Optional, Union
 from datetime import datetime
 import logging
 
-from sqlalchemy import select, func, update, delete
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from sqlalchemy import select, func, update, delete
+
 from models.table_models.user import User
 
 from services.postgres.database import get_async_session
 
 from exceptions.errors import UserNotRegError, RegistrationError, AccessDeniedError, TelegramAddressNotValidError
+
 from config import CIPHER_SUITE
+
 
 class UserService:
     def __init__(self):
