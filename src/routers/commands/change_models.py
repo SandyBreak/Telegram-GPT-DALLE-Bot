@@ -80,4 +80,4 @@ async def change_quality_img_model(callback: CallbackQuery, bot: Bot) -> None:
             
             ai_models_keyboard = await UserKeyboards.ai_models_keyboard(callback.from_user.id)
             await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, text="Выберите модель", reply_markup=ai_models_keyboard.as_markup(resize_keyboard=True, one_time_keyboard=True))
-    await callback.answer('Качество генерируемого изображения успешно изменено')
+    await callback.answer('Качество генерируемого изображения успешно изменено', show_alert=True)
