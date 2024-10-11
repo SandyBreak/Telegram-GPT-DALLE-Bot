@@ -77,7 +77,7 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
     except UserNotRegError:
         delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start", reply_markup=ReplyKeyboardRemove())
     except AccessDeniedError:
-        delete_message = await message.answer("Админстратор не дал вам доступ. Подождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
+        delete_message = await message.answer(f"{Emojis.ALLERT} Админстратор не дал вам доступ! {Emojis.ALLERT}\nПодождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
     
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     
