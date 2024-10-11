@@ -99,7 +99,7 @@ async def get_api_key(message: Message, state: FSMContext, bot: Bot) -> None:
         await bot.pin_chat_message(chat_id=SUPER_GROUP_ID, message_id=new_user_message.message_id)
         await RoleManagmentService.set_default_model_options(message.from_user.id)
         
-        await message.answer(f"{Emojis.FAIL} Поздравляю! Вы успешно прошли регистрацию! {Emojis.FAIL}\n\nДождитесь подтверждения вашего доступа")
+        await message.answer(f"{Emojis.SUCCESS} Поздравляю! Вы успешно прошли регистрацию! {Emojis.SUCCESS}\n\nДождитесь подтверждения вашего доступа")
     except TelegramAddressNotValidError:
         message_log = await message.answer(f"{Emojis.FAIL} Ошибка регистрации! {Emojis.FAIL}\n\nУ вас пустой адрес телеграмм аккаунта. Для успешной регистрации он не должен быть пустым. Если вы не знаете как его поменять обратитесь в поддержку по адресу @global_aide_bot.")
     except RegistrationError:
