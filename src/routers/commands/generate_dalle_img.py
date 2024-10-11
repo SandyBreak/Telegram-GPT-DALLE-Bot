@@ -73,7 +73,7 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
                 message_log = await message.answer("Извините, произошла ошибка.")
                 logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
         else:
-            message_log = await message.answer("Пожалуйста, введите текст запроса после команды /img.")
+            delete_message = await message.answer("Пожалуйста, введите текст запроса после команды /img.")
     except UserNotRegError:
         delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start", reply_markup=ReplyKeyboardRemove())
     except AccessDeniedError:
