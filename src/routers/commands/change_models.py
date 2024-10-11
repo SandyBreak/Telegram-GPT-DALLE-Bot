@@ -19,6 +19,9 @@ router = Router()
 
 @router.message(Command(commands=['change_models']))
 async def change_model(message: Message, state: FSMContext, bot: Bot) -> None:
+    """
+    Выввод клавиатуры с моделями
+    """
     if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
     await state.clear()
     try:
@@ -37,6 +40,9 @@ async def change_model(message: Message, state: FSMContext, bot: Bot) -> None:
     
 @router.callback_query(lambda F: 'change_llm_model' in F.data or 'change_img_model' in F.data)
 async def change_llm_or_img_model(callback: CallbackQuery, bot: Bot) -> None:
+    """
+    Смена языковой или генеративной модели
+    """
     data = json.loads(callback.data)
     
     temporary_user_data = await RoleManagmentService.get_temporary_user_data(callback.from_user.id, 'all_ids')
@@ -59,6 +65,9 @@ async def change_llm_or_img_model(callback: CallbackQuery, bot: Bot) -> None:
     
 @router.callback_query(lambda F: 'change_quality' in F.data)
 async def change_quality_img_model(callback: CallbackQuery, bot: Bot) -> None:
+    """
+    Смена качества для генеративной модели
+    """
     data = json.loads(callback.data)
     
     temporary_user_data = await RoleManagmentService.get_temporary_user_data(callback.from_user.id, 'all_ids')

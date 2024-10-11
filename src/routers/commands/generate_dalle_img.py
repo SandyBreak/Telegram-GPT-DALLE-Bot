@@ -23,12 +23,17 @@ router = Router()
 
 
 @router.message(Command(commands=['img']))
-async def cmd_start(message: Message, state: FSMContext, bot: Bot) -> None:
+async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
+    """
+    Генерация изображения при помощи генеративной модели
+    """
     if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
     await state.clear()
+    
     message_log = False #сообщение для логов в чат с пользователем в группе
     delete_message = False #сообщение для удаления
     generated_image_quality='standard'
+    
     try:
         await UserService.check_user_rights(message.from_user.id)
         
@@ -73,6 +78,7 @@ async def cmd_start(message: Message, state: FSMContext, bot: Bot) -> None:
         delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start", reply_markup=ReplyKeyboardRemove())
     except AccessDeniedError:
         delete_message = await message.answer("Админстратор не дал вам доступ. Подождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
+    
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     
     if message_log: await send_log_message(message, bot, message_log)

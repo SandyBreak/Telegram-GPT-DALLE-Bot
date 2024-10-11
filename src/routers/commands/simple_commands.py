@@ -22,6 +22,9 @@ router = Router()
 
 @router.message(Command(commands=['balance']))
 async def check_balance(message: Message, state: FSMContext, bot: Bot) -> None:
+    """
+    Вывод баланса пользователя
+    """
     if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
     
     await state.clear()
@@ -58,7 +61,10 @@ async def check_balance(message: Message, state: FSMContext, bot: Bot) -> None:
     
     
 @router.message(Command(commands=['view_set_options']))
-async def check_balance(message: Message, state: FSMContext, bot: Bot) -> None:
+async def view_set_options(message: Message, state: FSMContext, bot: Bot) -> None:
+    """
+    Вывод текущих настроек пользователя
+    """
     if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
     
     await state.clear()
