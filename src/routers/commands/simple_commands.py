@@ -10,10 +10,11 @@ from aiogram import Router, Bot
 
 from admin.admin_logs import send_log_message
 
+from models.long_messages import HELP_MESSAGE, TARIFFS_MESSAGE
 from models.emojis import Emojis
-from models.long_messages import HELP_MESSAGE
-from services.postgres.user_service import UserService
+
 from services.postgres.role_management_service import RoleManagmentService
+from services.postgres.user_service import UserService
 
 from exceptions.errors import UserNotRegError, AccessDeniedError
 
@@ -104,3 +105,15 @@ async def cmd_help(message: Message, state: FSMContext, bot: Bot) -> None:
     delete_message = await message.answer(HELP_MESSAGE, ParseMode.HTML)
     
     if delete_message: await state.update_data(message_id=delete_message.message_id)
+    
+    
+
+@router.message(Command(commands=['tariffs']))
+async def cmd_help(message: Message, state: FSMContext, bot: Bot) -> None:
+    if (delete_message_id := (await state.get_data()).get('message_id')): await bot.delete_message(chat_id=message.chat.id, message_id=delete_message_id)
+    await state.clear()
+    delete_message = await message.answer(TARIFFS_MESSAGE, ParseMode.HTML, disable_web_page_preview=True)
+    
+    if delete_message: await state.update_data(message_id=delete_message.message_id)
+    
+    

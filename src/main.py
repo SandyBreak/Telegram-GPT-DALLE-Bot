@@ -20,38 +20,42 @@ from config import TELEGRAM_TOKEN
 
 async def set_commands_and_description(bot: Bot) -> None:
     commands = [
-    BotCommand(
-        command="/cancel",
-        description="Отмена текущего действия"
-		),
-    BotCommand(
-        command="/balance",
-        description="Узнать баланс аккаунта"
-		),
-    BotCommand(
-        command="/view_set_options",
-        description="Показать текущие настройки моделей"
-		),
-    BotCommand(
-        command="/role_options",
-        description="Управление ролями (только для текстовых моделей)"
-		),
-    BotCommand(
-        command="/change_models",
-        description="Выбрать модели для пользования"
-		),
-    BotCommand(
-        command="/img",
-        description="Сгенерировать изображение"
-		),
-    BotCommand(
-        command="/change_api_key",
-        description="Поменять ключ аккаунта"
-		),
-    BotCommand(
-        command="/help",
-        description="Помощь"
-		)
+        BotCommand(
+            command="/cancel",
+            description="Отмена текущего действия"
+	    ),
+        BotCommand(
+            command="/balance",
+            description="Узнать баланс аккаунта"
+	    ),
+        BotCommand(
+            command="/view_set_options",
+            description="Показать текущие настройки моделей"
+	    ),
+        BotCommand(
+            command="/role_options",
+            description="Управление ролями (только для текстовых моделей)"
+	    ),
+        BotCommand(
+            command="/change_models",
+            description="Выбрать модели для пользования"
+        ),
+        BotCommand(
+            command="/img",
+            description="Сгенерировать изображение"
+	    ),
+        BotCommand(
+            command="/change_api_key",
+            description="Поменять ключ аккаунта"
+	    ),
+        BotCommand(
+            command="/tariffs",
+            description="Узнать тарифы моделей"
+	    ),
+        BotCommand(
+            command="/help",
+            description="Помощь"
+	    )
     ]
     #await bot.set_my_description(description=LONG_DESCRIPTION)
     await bot.set_my_short_description(short_description=SHORT_DESCRIPTION)
