@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  bot:
+    container_name: ai_bot
+    networks:
+      - primary_postgres_db_network
+    restart: always
+    build:
+      context: src/
+      dockerfile: bot.dockerfile
+    env_file:
+      - ./docker-compose.env
+
+
+networks:
+  primary_postgres_db_network:
+    external: true
