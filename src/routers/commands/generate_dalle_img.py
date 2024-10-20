@@ -77,6 +77,9 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
                 if "Insufficient balance" in error_detail.get('detail'):
                     message_log = await message.answer(f"{Emojis.FAIL} Недостаточно средств для совершения операции! {Emojis.FAIL}\n\n Текущий баланс: {primary_balance} рублей")
                     logging.error(f"Маленький баланс у пользователя {message.from_user.id}: {e}")
+                elif "Invalid API Key" in error_detail.get('detail'):
+                    message_log = await message.answer(f"{Emojis.FAIL} Неверный API ключ! {Emojis.FAIL}\n\nЧтобы поменять введите /change_api_key")
+                    logging.error(f"Неверный API ключ у пользователя {message.from_user.id}: {e}")
                 else:
                     message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
                     logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")

@@ -91,14 +91,17 @@ async def handle_user_request(message: Message, state: FSMContext, bot: Bot):
         except APIStatusError as e:
                 error_detail = e.response.json()
                 if "Insufficient balance" in error_detail.get('detail'):
-                    message_log = await message.answer(f"{Emojis.FAIL} Недостаточно средств для совершения операции! {Emojis.FAIL}\n\n Текущий баланс: {primary_balance} рублей\n\nОчистите историю роли или пополните баланс в личном кабинете.")
+                    message_log = await bot.edit_message_text(chat_id=load_message.chat.id, message_id=load_message.message_id, text=f"{Emojis.FAIL} Недостаточно средств для совершения операции! {Emojis.FAIL}\n\n Текущий баланс: {primary_balance} рублей\n\nОчистите историю роли или пополните баланс в личном кабинете.")
                     logging.error(f"Маленький баланс у пользователя {message.from_user.id}: {e}")
+                elif "Invalid API Key" in error_detail.get('detail'):
+                    message_log = await bot.edit_message_text(chat_id=load_message.chat.id, message_id=load_message.message_id, text=f"{Emojis.FAIL} Неверный API ключ! {Emojis.FAIL}\n\nЧтобы поменять введите /change_api_key")
+                    logging.error(f"Неверный API ключ у пользователя {message.from_user.id}: {e}")
                 else:
-                    message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
+                    message_log = await bot.edit_message_text(chat_id=load_message.chat.id, message_id=load_message.message_id, text="Извините, произошла ошибка. Сообщение администратору уже отправлено")
                     logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
         except Exception as e:
             message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
-            logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
+            logging.error(f"Ошибка при запросе к LLM у пользователя {message.from_user.id}: {e}")
     except UserNotRegError:
         delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start")
     except AccessDeniedError:
