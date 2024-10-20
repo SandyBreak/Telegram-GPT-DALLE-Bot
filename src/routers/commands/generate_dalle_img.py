@@ -8,7 +8,7 @@ from aiogram.filters import Command
 from aiogram.enums import ParseMode
 from aiogram import Router, Bot
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, APIStatusError
 
 from admin.admin_logs import send_log_message
 
@@ -18,6 +18,8 @@ from services.postgres.role_management_service import RoleManagmentService
 from services.postgres.user_service import UserService
 
 from exceptions.errors import UserNotRegError, AccessDeniedError
+
+from utils.assistant import MinorOperations
 
 router = Router()
 
@@ -36,7 +38,8 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
     
     try:
         await UserService.check_user_rights(message.from_user.id)
-        
+        primary_balance = await MinorOperations.check_balance(message.from_user.id)
+
         openai_api_key = await UserService.get_user_data(message.from_user.id, 'encrypted_api_account_key')
         
         temporary_user_data = await RoleManagmentService.get_temporary_user_data(message.from_user.id, 'all')
@@ -67,10 +70,18 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
                 
                 photo = FSInputFile(photo_file_path)
                 
-                await bot.delete_message(chat_id=message.chat.id, message_id=load_message.message_id)
-                message_log = await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=f"<b>Вы запросили изображение по запросу</b>:\n{query_text}", parse_mode=ParseMode.HTML)
+                secondary_balance = await MinorOperations.check_balance(message.from_user.id)
+                message_log = await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=f"<b>Вы запросили изображение по запросу</b>:\n{query_text}\n\n Стоимость: {primary_balance-secondary_balance} рублей", parse_mode=ParseMode.HTML)
+            except APIStatusError as e:
+                error_detail = e.response.json()
+                if "Insufficient balance" in error_detail.get('detail'):
+                    message_log = await message.answer(f"{Emojis.FAIL} Недостаточно средств для совершения операции! {Emojis.FAIL}\n\n Текущий баланс: {primary_balance} рублей")
+                    logging.error(f"Маленький баланс у пользователя {message.from_user.id}: {e}")
+                else:
+                    message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
+                    logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
             except Exception as e:
-                message_log = await message.answer("Извините, произошла ошибка.")
+                message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
                 logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
         else:
             delete_message = await message.answer("Пожалуйста, введите текст запроса после команды /img.")
@@ -79,6 +90,7 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
     except AccessDeniedError:
         delete_message = await message.answer(f"{Emojis.ALLERT} Админстратор не дал вам доступ! {Emojis.ALLERT}\nПодождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
     
+    await bot.delete_message(chat_id=message.chat.id, message_id=load_message.message_id)
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     
     if message_log: await send_log_message(message, bot, message_log)
