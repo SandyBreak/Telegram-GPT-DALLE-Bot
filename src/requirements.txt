@@ -43,3 +43,4 @@ tqdm==4.66.5
 typing_extensions==4.12.2
 urllib3==2.2.3
 yarl==1.15.5
+python-dotenv==1.0.1
