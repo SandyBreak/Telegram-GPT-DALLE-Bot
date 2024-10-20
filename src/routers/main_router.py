@@ -100,9 +100,9 @@ async def handle_user_request(message: Message, state: FSMContext, bot: Bot):
             message_log = await message.answer("Извините, произошла ошибка. Сообщение администратору уже отправлено")
             logging.error(f"Ошибка при генерации изображения у пользователя {message.from_user.id}: {e}")
     except UserNotRegError:
-        delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start", reply_markup=ReplyKeyboardRemove())
+        delete_message = await message.answer(f"{Emojis.ALLERT} Вы не зарегистрированы! {Emojis.ALLERT}\nДля регистрации введите команду /start")
     except AccessDeniedError:
-        delete_message = await message.answer(f"{Emojis.ALLERT} Админстратор не дал вам доступ! {Emojis.ALLERT}\nПодождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
+        delete_message = await message.answer(f"{Emojis.ALLERT} Админстратор не дал вам доступ! {Emojis.ALLERT}\nПодождите пока вам придет уведомление о том что доступ разрешен")
     
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     
