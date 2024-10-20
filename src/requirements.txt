@@ -44,4 +44,4 @@ typing_extensions==4.12.2
 urllib3==2.2.3
 yarl==1.15.5
 python-dotenv==1.0.1
-numpy              2.1.2
+numpy==2.1.2
