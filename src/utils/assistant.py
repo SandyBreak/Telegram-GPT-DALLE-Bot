@@ -1,6 +1,9 @@
 # -*- coding: UTF-8 -*-
-import logging
+from typing import Union
+
 import requests
+
+import logging
 
 from services.postgres.user_service import UserService
 
@@ -9,7 +12,7 @@ class MinorOperations:
         pass
     
     @staticmethod
-    async def check_balance(user_id: int) -> None:
+    async def check_balance(user_id: int) -> Union[int, str]:
         """
         Вывод баланса пользователя
         """
