@@ -53,7 +53,6 @@ async def handle_user_request(message: Message, state: FSMContext, bot: Bot):
         load_message = await message.answer(f'{Emojis.TIME} Обработка запроса')
         try:
             client = AsyncOpenAI(api_key=openai_api_key, base_url="https://api.proxyapi.ru/openai/v1")
-            print('model', temporary_user_data.llm_model)
             stream = await client.chat.completions.create(
                 messages=temporary_user_data.history_dialog,
                 model=temporary_user_data.llm_model,
