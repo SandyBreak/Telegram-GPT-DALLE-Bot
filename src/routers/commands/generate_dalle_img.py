@@ -34,6 +34,7 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
     
     message_log = False #сообщение для логов в чат с пользователем в группе
     delete_message = False #сообщение для удаления
+    load_message = False
     generated_image_quality='standard'
     
     try:
@@ -93,7 +94,7 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
     except AccessDeniedError:
         delete_message = await message.answer(f"{Emojis.ALLERT} Админстратор не дал вам доступ! {Emojis.ALLERT}\nПодождите пока вам придет уведомление о том что доступ разрешен", reply_markup=ReplyKeyboardRemove())
     
-    await bot.delete_message(chat_id=message.chat.id, message_id=load_message.message_id)
+    if load_message: await bot.delete_message(chat_id=message.chat.id, message_id=load_message.message_id)
     if delete_message: await state.update_data(message_id=delete_message.message_id)
     
     if message_log: await send_log_message(message, bot, message_log)
