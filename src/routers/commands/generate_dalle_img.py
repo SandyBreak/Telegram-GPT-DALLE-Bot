@@ -56,23 +56,24 @@ async def generate_igm(message: Message, state: FSMContext, bot: Bot) -> None:
                 client = AsyncOpenAI(api_key=openai_api_key, base_url="https://api.proxyapi.ru/openai/v1")
                 
                 response = await client.images.generate(
-                    model=temporary_user_data.img_model if temporary_user_data.img_model != 'dall-e-3-hd' else 'dall-e-3',
                     prompt=query_text,
+                    model=temporary_user_data.img_model if temporary_user_data.img_model != 'dall-e-3-hd' else 'dall-e-3',
                     n=1,  # Количество изображений для генерации
+                    quality=generated_image_quality,
+                    response_format="url",
                     size=temporary_user_data.quality_generated_image,  # Размер изображения
-                    style='vivid',
-                    response_format='b64_json',
-                    quality=generated_image_quality 
+                    style="vivid"
                 )
-                photo_file_path = f'downloads/generated_image{message.from_user.id}.png'
+                #photo_file_path = f'downloads/generated_image{message.from_user.id}.png'
+                #print(response)
+                #with open(photo_file_path, 'wb') as photo_file:
+                #    photo_file.write(base64.b64decode(response.data[0].b64_json))
                 
-                with open(photo_file_path, 'wb') as photo_file:
-                    photo_file.write(base64.b64decode(response.data[0].b64_json))
-                
-                photo = FSInputFile(photo_file_path)
+                #photo = FSInputFile(photo_file_path)
                 
                 secondary_balance = await MinorOperations.check_balance(message.from_user.id)
-                message_log = await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=f"<b>Вы запросили изображение по запросу</b>:\n{query_text}\n\n Стоимость: {primary_balance-secondary_balance} рублей", parse_mode=ParseMode.HTML)
+                #message_log = await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=f"<b>Вы запросили изображение по запросу</b>:\n{query_text}\n\n Стоимость: {primary_balance-secondary_balance} рублей", parse_mode=ParseMode.HTML)
+                message_log = await message.answer(f"<b>Вы запросили <a href='{response.data[0].url}'>ИЗОБРАЖЕНИЕ</a> по запросу</b>:\n{query_text}\n\n Стоимость: {primary_balance-secondary_balance} рублей", parse_mode=ParseMode.HTML)
             except APIStatusError as e:
                 error_detail = e.response.json()
                 if "Insufficient balance" in error_detail.get('detail'):
