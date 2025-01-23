@@ -41,6 +41,7 @@ async def handle_user_request(message: Message, state: FSMContext, bot: Bot):
     try:
         await UserService.check_user_rights(message.from_user.id)
         primary_balance = await MinorOperations.check_balance(message.from_user.id)
+        print(primary_balance)
         openai_api_key = await UserService.get_user_data(message.from_user.id, 'encrypted_api_account_key')
         
         temporary_user_data = await RoleManagmentService.get_temporary_user_data(message.from_user.id, 'all')
