@@ -42,7 +42,7 @@ async def check_balance(message: Message, state: FSMContext, bot: Bot) -> None:
             "Authorization": f"Bearer {openai_api_key}"
         }
         
-        response = requests.post("https://api.proxyapi.ru/proxyapi/balance", headers=headers)
+        response = requests.get("https://api.proxyapi.ru/proxyapi/balance", headers=headers)
 
         if response.status_code == 200:
             message_log = await message.answer(f"Баланс: {response.json()['balance']} рублей")
