@@ -29,6 +29,6 @@ class MinorOperations:
             if response.status_code == 200:
                 return response.json()['balance']
             else:
-                logging.error("Error:", response.status_code, response.text)
+                logging.error(f"Error: {response.status_code}, {response.text}")
         except Exception as e:
             logging.critical(f'Error checking balance! User ID: {user_id}')

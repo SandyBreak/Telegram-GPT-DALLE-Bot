@@ -47,7 +47,7 @@ async def check_balance(message: Message, state: FSMContext, bot: Bot) -> None:
         if response.status_code == 200:
             message_log = await message.answer(f"Баланс: {response.json()['balance']} рублей")
         else:
-            logging.error("Error:", response.status_code, response.text)
+            logging.error(f"Error: {response.status_code}, {response.text}")
             message_log = await message.answer(f'{Emojis.FAIL} Ошибка проверки баланса!{Emojis.FAIL}\nStatus code: {response.status_code}\nResponse text: {response.text}')
     
     except UserNotRegError:
