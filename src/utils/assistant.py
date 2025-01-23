@@ -23,8 +23,8 @@ class MinorOperations:
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {openai_api_key}"
             }
-            logging.critical(openai_api_key)
-            response = requests.post("https://api.proxyapi.ru/proxyapi/balance", headers=headers)
+            #logging.critical(openai_api_key)
+            response = requests.get("https://api.proxyapi.ru/proxyapi/balance", headers=headers)
 
             if response.status_code == 200:
                 return response.json()['balance']
